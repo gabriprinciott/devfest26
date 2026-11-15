@@ -14,6 +14,9 @@ func simulate(money, wire int64, operations []Operation) map[string]int64 {
 	clips := int64(0)
 	for _, operation := range operations {
 		quantity := operation.Quantity
+		if quantity <= 0 {
+			continue
+		}
 		switch operation.Kind {
 		case "buy":
 			if money >= quantity {
@@ -22,10 +25,12 @@ func simulate(money, wire int64, operations []Operation) map[string]int64 {
 			}
 		case "make":
 			if wire >= quantity {
+				wire -= quantity
 				clips += quantity
 			}
 		case "sell":
 			if clips >= quantity {
+				clips -= quantity
 				money += 2 * quantity
 			}
 		}
